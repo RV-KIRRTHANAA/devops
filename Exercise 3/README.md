@@ -29,3 +29,23 @@ docker images flashsale
 The `flashsale:1.0` image must be available before Phase 2. A registry push is
 not required when the image is built directly into Minikube's Docker daemon.
 
+## Phase 2: Deploy and Verify Three Pods
+
+Apply the ReplicaSet and Service manifest:
+
+```powershell
+minikube kubectl -- apply -f .\Exercise 3\k8s\flashsale-replicaset.yaml
+```
+
+Wait for all three replicas to become ready and inspect them:
+
+```powershell
+minikube kubectl -- wait --for=condition=Ready pod -l app=flashsale --timeout=120s
+minikube kubectl -- get rs flashsale-rs
+minikube kubectl -- get pods -l app=flashsale -o wide
+minikube kubectl -- get service flashsale-svc
+```
+
+The ReplicaSet should report `3` desired, current, and ready replicas. Each
+Pod should be `Running` and ready before moving to Phase 3.
+
