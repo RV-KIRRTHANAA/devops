@@ -49,3 +49,32 @@ minikube kubectl -- get service flashsale-svc
 The ReplicaSet should report `3` desired, current, and ready replicas. Each
 Pod should be `Running` and ready before moving to Phase 3.
 
+## Phase 3: Scale and Verify Self-Healing
+
+Scale the ReplicaSet from three to five replicas:
+
+```powershell
+minikube kubectl -- scale rs flashsale-rs --replicas=5
+minikube kubectl -- wait --for=condition=Ready pod -l app=flashsale --timeout=120s
+minikube kubectl -- get rs flashsale-rs
+minikube kubectl -- get pods -l app=flashsale -o wide
+```
+
+Delete one of the five Pods. Replace `<pod-name>` with a Pod name from the
+previous command:
+
+```powershell
+minikube kubectl -- delete pod <pod-name>
+```
+
+Verify that the ReplicaSet creates a replacement Pod:
+
+```powershell
+minikube kubectl -- get pods -l app=flashsale -o wide
+minikube kubectl -- get rs flashsale-rs
+```
+
+The ReplicaSet should return to five ready Pods after the deletion. Because
+this exercise uses a single-node cluster, all Pods are expected to show the
+same node while still demonstrating replica scaling and self-healing.
+
