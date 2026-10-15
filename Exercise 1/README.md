@@ -62,6 +62,18 @@ minikube kubectl -- get pods -o wide
 The `hello-k8s` Pod should report `Running` and `1/1` containers ready before
 moving to Phase 3.
 
+## Phase 3: Expose the Pod
+
+Apply the NodePort Service manifest:
+
+```powershell
+minikube kubectl -- apply -f .\Exercise 1\k8s\hello-service.yaml
+minikube kubectl -- get service hello-k8s
+```
+
+The `hello-k8s` Service should have type `NodePort` and route traffic on port
+80 to the Nginx Pod before moving to Phase 4.
+
 ## Troubleshooting
 
 - If Minikube cannot connect to Docker, start Docker Desktop and retry.
