@@ -44,9 +44,30 @@ minikube kubectl -- get nodes
 
 The node must report `Ready` before moving to Phase 2.
 
+## Phase 2: Create the Nginx Pod
+
+Apply the Pod manifest:
+
+```powershell
+minikube kubectl -- apply -f .\Exercise 1\k8s\hello-pod.yaml
+```
+
+Wait for the Pod to become ready and inspect it:
+
+```powershell
+minikube kubectl -- wait --for=condition=Ready pod/hello-k8s --timeout=120s
+minikube kubectl -- get pods -o wide
+```
+
+The `hello-k8s` Pod should report `Running` and `1/1` containers ready before
+moving to Phase 3.
+
 ## Troubleshooting
 
 - If Minikube cannot connect to Docker, start Docker Desktop and retry.
 - If PowerShell cannot find Minikube, rerun the `PATH` setup above or open a
   new PowerShell window.
+- If the Pod is not ready, inspect it with
+  `minikube kubectl -- describe pod hello-k8s` and
+  `minikube kubectl -- logs hello-k8s`.
 
