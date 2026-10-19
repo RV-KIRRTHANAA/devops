@@ -35,3 +35,30 @@ git config user.name "Your Name"
 git config user.email "your-email@example.com"
 ```
 
+## Phase 2: Publish the Script to GitHub
+
+Create a public GitHub repository named `devops-sample-code` from your GitHub
+account. Create a fine-grained Personal Access Token with the minimum
+repository contents permission needed to push to that repository.
+
+From the Exercise 8 directory, connect the local repository to GitHub:
+
+```bash
+git branch -M main
+git remote add origin https://github.com/<your-username>/devops-sample-code.git
+git remote -v
+```
+
+Push the commit:
+
+```bash
+git push -u origin main
+```
+
+When Git prompts for credentials, enter your GitHub username and use the PAT
+as the password. Do not place the PAT in the remote URL, script files, or
+repository contents.
+
+Verify that `hello-world.sh` is visible in the GitHub repository before moving
+to Phase 3.
+
