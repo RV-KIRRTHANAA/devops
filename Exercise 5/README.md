@@ -34,3 +34,38 @@ docker image inspect flask-apparmor
 
 The `flask-apparmor` image must exist before moving to Phase 2.
 
+## Phase 2: Load and Apply the AppArmor Profile
+
+These commands must run on a Linux host or Linux VM with AppArmor enabled.
+Install the AppArmor utilities if needed:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y apparmor-utils
+```
+
+Copy the profile into AppArmor's profile directory and load it:
+
+```bash
+sudo cp ./Exercise\ 5/apparmor/my-apparmor-profile /etc/apparmor.d/my-apparmor-profile
+sudo apparmor_parser -r /etc/apparmor.d/my-apparmor-profile
+sudo aa-status | grep my-apparmor-profile
+```
+
+Run the Flask container with the profile attached:
+
+```bash
+docker run -d --name flask-apparmor-test \
+  --security-opt="apparmor=my-apparmor-profile" \
+  -p 5000:5000 flask-apparmor
+```
+
+Check that the container is running:
+
+```bash
+docker ps --filter name=flask-apparmor-test
+```
+
+The profile must be loaded successfully and the container must be running
+before moving to Phase 3.
+

@@ -1,0 +1,24 @@
+#include <tunables/global>
+
+profile my-apparmor-profile flags=(attach_disconnected,mediate_deleted) {
+    # Basic runtime permissions needed by the Python process.
+    #include <abstractions/base>
+
+    network inet stream,
+    capability net_bind_service,
+
+    # Allow the Flask application to read and write only its application tree.
+    /app/** rwk,
+
+    # Deny access to especially sensitive host/container files.
+    deny /etc/passwd r,
+    deny /etc/shadow r,
+    deny /var/** rw,
+
+    # Prevent execution of interactive shells and binaries from these paths.
+    deny /bin/** x,
+    deny /usr/bin/** x,
+
+    # Prevent privileged administration capabilities.
+    deny capability sys_admin,
+}
