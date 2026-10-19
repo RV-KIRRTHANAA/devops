@@ -28,3 +28,38 @@ docker image inspect flask-api
 
 The `flask-api` image must exist before moving to Phase 2.
 
+## Phase 2: Create the Network and Launch Containers
+
+Create a user-defined bridge network:
+
+```powershell
+docker network create --driver bridge my-bridge-net
+docker network ls
+docker network inspect my-bridge-net
+```
+
+Launch MySQL, Redis, and Flask on the same network. The MySQL password is
+required by the official MySQL image, even though this exercise only tests
+network connectivity:
+
+```powershell
+docker run -d --name mysql --network my-bridge-net `
+  -e MYSQL_ROOT_PASSWORD=devops-root-password `
+  mysql:latest
+
+docker run -d --name redis --network my-bridge-net redis:latest
+
+docker run -d --name flask --network my-bridge-net `
+  -p 5001:5001 flask-api
+```
+
+Verify that all three containers are running and attached to the network:
+
+```powershell
+docker ps
+docker network inspect my-bridge-net
+```
+
+The containers should be named `mysql`, `redis`, and `flask`. Continue to
+Phase 3 after all three containers report a running status.
+
