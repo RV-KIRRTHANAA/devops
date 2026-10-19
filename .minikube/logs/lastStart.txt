@@ -1,0 +1,27 @@
+Log file created at: 2026/10/15 23:24:31
+Running on machine: Kirrthanaa
+Binary: Built with gc go1.26.5 for windows/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I1015 23:24:31.170072   10664 out.go:361] Setting OutFile to fd 8 ...
+I1015 23:24:31.171687   10664 out.go:409] TERM=dumb,COLORTERM=, which probably does not support color
+I1015 23:24:31.171687   10664 out.go:375] Setting ErrFile to fd 2100...
+I1015 23:24:31.171687   10664 out.go:409] TERM=dumb,COLORTERM=, which probably does not support color
+W1015 23:24:31.179082   10664 root.go:308] Error reading config file at C:\Users\R V KIrrthanaa\OneDrive\Desktop\Devops\.minikube\config\config.json: open C:\Users\R V KIrrthanaa\OneDrive\Desktop\Devops\.minikube\config\config.json: The system cannot find the path specified.
+I1015 23:24:31.215387   10664 out.go:369] Setting JSON to false
+I1015 23:24:31.217056   10664 start.go:134] hostinfo: {"hostname":"Kirrthanaa","uptime":105245,"bootTime":1791981625,"procs":4,"os":"windows","platform":"Microsoft Windows 11 Home Single Language","platformFamily":"Standalone Workstation","platformVersion":"25H2","kernelVersion":"10.0.26200.9711 Build 26200.9711","kernelArch":"x86_64","virtualizationSystem":"","virtualizationRole":"","hostId":"af592d77-b5f7-4d8e-b585-6255e867dae0"}
+W1015 23:24:31.217056   10664 start.go:142] gopshost.Virtualization returned error: not implemented yet
+I1015 23:24:31.219448   10664 out.go:180] * minikube v1.39.0 on Microsoft Windows 11 Home Single Language 25H2
+I1015 23:24:31.221195   10664 notify.go:220] Checking for updates...
+I1015 23:24:31.221195   10664 out.go:180]   - MINIKUBE_HOME=C:\Users\R V KIrrthanaa\OneDrive\Desktop\Devops\.minikube
+W1015 23:24:31.221195   10664 preload.go:371] Failed to list preload files: open C:\Users\R V KIrrthanaa\OneDrive\Desktop\Devops\.minikube\cache\preloaded-tarball: The system cannot find the file specified.
+I1015 23:24:31.229482   10664 driver.go:413] Setting default libvirt URI to qemu:///system
+W1015 23:24:31.265736   10664 notify.go:59] Error getting json from minikube version url: error with http GET for endpoint https://storage.googleapis.com/minikube/releases-v2.json: Get "https://storage.googleapis.com/minikube/releases-v2.json": dial tcp: lookup storage.googleapis.com: no such host
+W1015 23:24:31.488425   10664 docker.go:184] docker version returned error: exit status 1
+I1015 23:24:31.490129   10664 out.go:180] * Using the docker driver based on user configuration
+I1015 23:24:31.491760   10664 start.go:315] selected driver: docker
+I1015 23:24:31.492425   10664 start.go:943] validating driver "docker" against <nil>
+I1015 23:24:31.492425   10664 start.go:954] status for docker: {Installed:true Healthy:false Running:true NeedsImprovement:false Error:"docker version --format {{.Server.Os}}-{{.Server.Version}}:{{.Server.Platform.Name}}" exit status 1: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified. Reason:PROVIDER_DOCKER_VERSION_EXIT_1 Fix: Doc:https://minikube.sigs.k8s.io/docs/drivers/docker/ Version:}
+I1015 23:24:31.494749   10664 out.go:204] 
+W1015 23:24:31.497366   10664 out.go:286] X Exiting due to PROVIDER_DOCKER_VERSION_EXIT_1: "docker version --format <no value>-<no value>:<no value>" exit status 1: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+W1015 23:24:31.497366   10664 out.go:286] * Documentation: https://minikube.sigs.k8s.io/docs/drivers/docker/
+I1015 23:24:31.500327   10664 out.go:204] 
