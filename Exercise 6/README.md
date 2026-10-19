@@ -73,3 +73,45 @@ In Prometheus, open `http://localhost:9090/alerts` and confirm that the alert
 rules are loaded. `HighPendingDeliveries` should become pending or firing when
 `pending_deliveries` remains above 10 for 15 seconds.
 
+## Phase 3: Automate with Jenkins and Simulate an Alert
+
+The [Jenkinsfile](Jenkinsfile) checks Docker, starts the monitoring stack,
+verifies the metrics endpoint, restarts the metrics container with high
+pending-delivery values, queries Prometheus, and cleans up the stack.
+
+The Jenkins agent must have both the Docker CLI and Docker Compose available,
+and must be allowed to access the Docker daemon. A typical Linux Jenkins
+container is started with the Docker socket mounted:
+
+```bash
+docker run -d --name jenkins \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkins/jenkins:lts
+```
+
+Configure a Jenkins Pipeline job to use this repository and run the
+`Jenkinsfile`. The build should complete the Docker pre-check, start the
+monitoring stack, query metrics, simulate high pending deliveries, query
+Prometheus, and run the cleanup block.
+
+To simulate the alert manually without Jenkins, recreate the metrics service
+with a high pending range:
+
+```powershell
+docker compose -f .\Exercise 6\docker-compose.yml stop delivery-metrics
+docker compose -f .\Exercise 6\docker-compose.yml rm -f delivery-metrics
+docker compose -f .\Exercise 6\docker-compose.yml run -d --name delivery-metrics `
+  -e PENDING_MIN=50 -e PENDING_MAX=100 delivery-metrics
+```
+
+Wait at least 20 seconds, then check `http://localhost:9090/alerts`.
+
+### Cleanup
+
+```powershell
+docker compose -f .\Exercise 6\docker-compose.yml down -v
+docker rm -f jenkins
+```
+

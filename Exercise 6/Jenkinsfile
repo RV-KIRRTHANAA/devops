@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        COMPOSE_FILE = 'Exercise 6/docker-compose.yml'
+        MONITORING_NETWORK = 'delivery-monitoring'
+    }
+
+    stages {
+        stage('Pre-check Docker') {
+            steps {
+                sh 'docker version'
+                sh 'docker compose version'
+            }
+        }
+
+        stage('Start Monitoring Stack') {
+            steps {
+                sh 'docker compose -f "$COMPOSE_FILE" up -d --build'
+            }
+        }
+
+        stage('Verify Metrics') {
+            steps {
+                sh '''
+                docker exec delivery-metrics python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8000/metrics').read().decode()[:500])"
+                '''
+            }
+        }
+
+        stage('Simulate High Pending Deliveries') {
+            steps {
+                sh '''
+                docker compose -f "$COMPOSE_FILE" stop delivery-metrics
+                docker compose -f "$COMPOSE_FILE" rm -f delivery-metrics
+                docker compose -f "$COMPOSE_FILE" run -d --name delivery-metrics \
+                  -e PENDING_MIN=50 -e PENDING_MAX=100 delivery-metrics
+                sleep 20
+                '''
+            }
+        }
+
+        stage('Verify Alert Query') {
+            steps {
+                sh '''
+                docker run --rm --network "$MONITORING_NETWORK" curlimages/curl:latest \
+                  --fail --silent \
+                  'http://prometheus:9090/api/v1/query?query=pending_deliveries'
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker compose -f "$COMPOSE_FILE" down -v || true'
+        }
+    }
+}
