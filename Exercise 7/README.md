@@ -53,3 +53,40 @@ Exercise 7/Jenkinsfile
 The sample application and test are in [ci_app.py](ci_app.py) and
 [test_ci_app.py](test_ci_app.py).
 
+## Phase 3: Run and Verify the Pipeline
+
+Start Jenkins if it is not already running:
+
+```powershell
+docker compose -f .\Exercise 7\docker-compose.yml up -d
+```
+
+Open Jenkins at `http://localhost:8080`, open the Pipeline job, and select
+**Build Now**. The build should show these successful stages:
+
+- Checkout
+- Validate Python
+- Run Tests
+
+Open the build number and select **Console Output** to inspect the checkout,
+Python validation, and unit-test logs. A successful run should end with:
+
+```text
+CI pipeline completed successfully.
+Finished: SUCCESS
+```
+
+### Cleanup
+
+Stop and remove the Jenkins container while preserving the named volume:
+
+```powershell
+docker compose -f .\Exercise 7\docker-compose.yml down
+```
+
+To remove Jenkins data as well, use:
+
+```powershell
+docker compose -f .\Exercise 7\docker-compose.yml down -v
+```
+
