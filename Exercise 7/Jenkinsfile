@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validate Python') {
+            steps {
+                sh 'python --version'
+                sh 'python -m compileall -q "Exercise 7/ci_app.py" "Exercise 7/test_ci_app.py"'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'python -m unittest discover -s "Exercise 7" -p "test_*.py" -v'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI pipeline completed successfully.'
+        }
+        failure {
+            echo 'CI pipeline failed. Review the stage logs.'
+        }
+    }
+}

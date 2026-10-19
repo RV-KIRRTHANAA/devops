@@ -34,3 +34,22 @@ Use that password on the Jenkins unlock page, install the suggested plugins,
 and create the first administrator account. Jenkins data is stored in the
 named `jenkins_home` volume so it survives container restarts.
 
+## Phase 2: Create a CI Pipeline
+
+The [Jenkinsfile](Jenkinsfile) performs three CI stages:
+
+1. Check out the repository.
+2. Validate the Python source files compile successfully.
+3. Run the unit test suite.
+
+The Jenkins agent must have Python 3.10 or newer available as `python`. In
+Jenkins, create a Pipeline job, choose **Pipeline script from SCM**, select the
+repository, and set the script path to:
+
+```text
+Exercise 7/Jenkinsfile
+```
+
+The sample application and test are in [ci_app.py](ci_app.py) and
+[test_ci_app.py](test_ci_app.py).
+
