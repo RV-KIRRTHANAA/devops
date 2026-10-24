@@ -41,3 +41,26 @@ minikube -p devops-multinode image ls
 
 Both images must be available before moving to Phase 2.
 
+## Phase 2: Deploy and Verify Replica Distribution
+
+Apply both Deployment manifests:
+
+```powershell
+minikube -p devops-multinode kubectl -- apply -f ".\Exercise 10\k8s\product_catalog_deployment.yaml"
+minikube -p devops-multinode kubectl -- apply -f ".\Exercise 10\k8s\shopping_cart_deployment.yaml"
+```
+
+Wait for the requested replicas to become ready:
+
+```powershell
+minikube -p devops-multinode kubectl -- wait --for=condition=Available deployment/product-catalog --timeout=120s
+minikube -p devops-multinode kubectl -- wait --for=condition=Available deployment/shopping-cart --timeout=120s
+minikube -p devops-multinode kubectl -- get deployments
+minikube -p devops-multinode kubectl -- get pods -o wide
+```
+
+Product Catalog should have two ready replicas on different nodes. Shopping
+Cart should have three ready replicas, one on each node. If a replica remains
+Pending, confirm that the cluster has three Ready nodes and that the images
+were loaded into the Minikube profile.
+
