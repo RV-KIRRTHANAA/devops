@@ -56,6 +56,32 @@ pipeline {
                 '''
             }
         }
+
+        stage('Code Quality') {
+            steps {
+                echo 'Running Flake8 checks...'
+                sh '"$VENV_DIR/bin/flake8" app.py test_app.py'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo 'Building the Docker image...'
+                sh 'docker build -t jenkins-flask-app .'
+            }
+        }
+
+        stage('Docker Deploy') {
+            steps {
+                echo 'Deploying the Flask app in Docker...'
+                sh '''
+                docker rm -f jenkins-flask-app 2>/dev/null || true
+                docker run -d --name jenkins-flask-app -p 5001:5000 jenkins-flask-app
+                sleep 2
+                "$VENV_DIR/bin/python" -c "import urllib.request; response = urllib.request.urlopen('http://127.0.0.1:5001/', timeout=10); assert response.status == 200; print(response.read().decode())"
+                '''
+            }
+        }
     }
 
     post {
@@ -64,6 +90,7 @@ pipeline {
             if [ -f "$APP_PID_FILE" ]; then
                 kill "$(cat "$APP_PID_FILE")" 2>/dev/null || true
             fi
+            docker rm -f jenkins-flask-app 2>/dev/null || true
             '''
         }
         success {

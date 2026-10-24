@@ -43,3 +43,28 @@ The Jenkins agent must provide `python3`, `python3-venv`, and a shell. Run the
 job after the repository is connected; the pipeline cleans up the temporary
 Flask process in its `post` block.
 
+## Phase 3: Add Quality, Docker Deployment, and Notifications
+
+The pipeline now adds these stages:
+
+- **Code Quality** runs Flake8 against the application and tests.
+- **Docker Build** builds the `jenkins-flask-app` image.
+- **Docker Deploy** runs the image on host port `5001` and verifies the HTTP
+  response.
+
+The Jenkins agent must also have Docker CLI, Docker Compose support, and access
+to the Docker daemon. For a Linux Jenkins container, mount the Docker socket:
+
+```bash
+docker run -d --name jenkins \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkins/jenkins:lts
+```
+
+Configure the job to use [Jenkinsfile](Jenkinsfile), run **Build Now**, and
+verify that the Code Quality, Docker Build, and Docker Deploy stages pass. The
+pipeline prints success or failure notifications and removes the temporary
+Flask process and Docker container in its cleanup block.
+
