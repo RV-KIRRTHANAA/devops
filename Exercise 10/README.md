@@ -64,3 +64,49 @@ Cart should have three ready replicas, one on each node. If a replica remains
 Pending, confirm that the cluster has three Ready nodes and that the images
 were loaded into the Minikube profile.
 
+## Phase 3: Expose and Test Both Services
+
+Apply the NodePort Services:
+
+```powershell
+minikube -p devops-multinode kubectl -- apply -f ".\Exercise 10\k8s\product_catalog_service.yaml"
+minikube -p devops-multinode kubectl -- apply -f ".\Exercise 10\k8s\shopping_cart_service.yaml"
+minikube -p devops-multinode kubectl -- get services
+```
+
+Get a local URL for each Service. Keep each command running in its own
+terminal when using the Docker driver:
+
+```powershell
+minikube -p devops-multinode service product-catalog-service --url
+minikube -p devops-multinode service shopping-cart-service --url
+```
+
+Use the returned URLs to test the APIs:
+
+```powershell
+curl.exe http://127.0.0.1:<product-catalog-port>/products
+curl.exe http://127.0.0.1:<shopping-cart-port>/cart
+curl.exe -X POST http://127.0.0.1:<shopping-cart-port>/cart `
+  -H "Content-Type: application/json" `
+  -d '{"id":1,"name":"Laptop","quantity":1}'
+```
+
+The catalog request should return three products. The cart should initially
+return `[]`, then return the added item after the POST request.
+
+Check final placement and Service endpoints:
+
+```powershell
+minikube -p devops-multinode kubectl -- get pods -o wide
+minikube -p devops-multinode kubectl -- get endpoints product-catalog-service shopping-cart-service
+```
+
+### Cleanup
+
+Remove the entire exercise profile when finished:
+
+```powershell
+minikube delete -p devops-multinode
+```
+
